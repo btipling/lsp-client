@@ -1,15 +1,21 @@
 {
   "compilerOptions": {
-    "module": "system",
-    "outFile": "dist/index.js",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "outDir": "dist",
     "inlineSources": true,
     "sourceMap": true
   },
+  "typeRoots": [
+    "../node_modules/@types"
+  ],
+    "types" : [
+    "core-js"
+  ],
   "include": [
     "src/**/*"
   ],
   "exclude": [
-    "node_modules",
     "src/main.ts"
   ]
 }
