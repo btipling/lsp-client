@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "system",
+    "outFile": "dist/index.js",
+    "sourceMap": true
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
