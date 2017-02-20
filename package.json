@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
-    "build-main": "yarn tsc -- --outFile ./main.js ./main.ts",
+    "build-main": "yarn tsc -- --sourceMap --outFile ./main.js ./src/main.ts",
     "build-index": "yarn tsc -- -p tsconfig.json",
     "run-electron": "yarn electron .",
     "start": "yarn build-main && yarn build-index && yarn run-electron"
