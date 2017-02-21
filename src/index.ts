@@ -1,18 +1,28 @@
-import xs from 'xstream';
-import {run} from '@cycle/xstream-run';
-import {makeDOMDriver, h1} from '@cycle/dom';
+import { h1, makeDOMDriver, VNode } from '@cycle/dom';
+import { DOMSource } from '@cycle/dom/xstream-typings';
+import { run } from '@cycle/xstream-run';
+import xs, { Stream } from 'xstream';
+import logger, { Logger } from './logger';
 
-function main() {
-  const sinks = {
-    DOM: xs.periodic(1000).map(i =>
-      h1('' + i + ' seconds elapsed')
-    )
+export interface ISources {
+  DOM: DOMSource;
+  LOGGER: Logger;
+}
+export interface ISinks {
+  DOM: Stream<VNode>;
+}
+
+function main(sources: ISources): ISinks {
+  return {
+    DOM: xs.periodic(1000).map((i) =>
+      h1(`${i} seconds elapsed`),
+    ),
   };
-  return sinks;
 }
 
 const drivers = {
-  DOM: makeDOMDriver('#app')
+  DOM: makeDOMDriver('#app'),
+  LOGGER: logger('debug'),
 };
 
 run(main, drivers);

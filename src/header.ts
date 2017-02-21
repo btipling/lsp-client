@@ -1,4 +1,4 @@
 
-export default function header () {
-  console.log('lol container');
+export default function header() {
+  // TODO: something
 }
