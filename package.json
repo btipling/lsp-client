@@ -7,7 +7,8 @@
     "build-main": "yarn tsc -- --sourceMap --outFile ./main.js ./src/main.ts",
     "build-index": "yarn tsc -- -p tsconfig.json",
     "run-electron": "yarn electron .",
-    "start": "yarn lint && yarn build-main && yarn build-index && yarn run-electron"
+    "debug": "yarn build-index && yarn run-electron",
+    "start": "yarn lint && yarn build-main && yarn debug"
   },
   "dependencies": {
     "@cycle/base": "^4.3.0",

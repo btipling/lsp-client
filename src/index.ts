@@ -1,22 +1,29 @@
-import { h1, makeDOMDriver, VNode } from '@cycle/dom';
-import { DOMSource } from '@cycle/dom/xstream-typings';
+import { h1, div, makeDOMDriver, VNode } from '@cycle/dom';
 import { run } from '@cycle/xstream-run';
 import xs, { Stream } from 'xstream';
-import logger, { Logger } from './logger';
+import logger from './logger';
+import { ISinks } from './interfaces/sinks';
+import { ISources } from './interfaces/sources';
+import Connect from './connect';
 
-export interface ISources {
-  DOM: DOMSource;
-  LOGGER: Logger;
-}
-export interface ISinks {
-  DOM: Stream<VNode>;
+
+function view(connectDOM: Stream<VNode>): Stream<VNode> {
+  const interval$ =  xs.periodic(1000);
+  return xs.combine(connectDOM, interval$)
+  .map(([connectVTree, i]) =>
+    div([
+      h1(`${i} seconds elapsed`),
+      connectVTree,
+    ])
+  )
 }
 
 function main(sources: ISources): ISinks {
+
+  let connect = Connect(sources);
+
   return {
-    DOM: xs.periodic(1000).map((i) =>
-      h1(`${i} seconds elapsed`),
-    ),
+    DOM: view(connect.DOM),
   };
 }
 
