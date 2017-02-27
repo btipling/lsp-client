@@ -1,9 +1,10 @@
 import { VNode } from '@cycle/dom';
 import { Stream } from 'xstream';
+import { RunEvent } from '../run';
 
 export interface ISinks {
   DOM: Stream<VNode>;
-  RUN: Stream<string>;
+  RUN: Stream<RunEvent>;
 }
 
 export interface IConnectSinks {

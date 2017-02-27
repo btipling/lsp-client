@@ -1,14 +1,14 @@
 import xs, { Stream } from 'xstream';
 
-export enum EventType {
+export enum RunEventType {
   Action = 1,
   Initialize,
 }
-export type Event = { type: EventType, payload: string };
+export type RunEvent = { type: RunEventType, payload: string };
 
-export function makeRunDriver(): (outgoing$: Stream<Event>) => Stream<string> {
+export function makeRunDriver(): (outgoing$: Stream<RunEvent>) => Stream<string> {
 
-  function runDriver(outgoing$: Stream<Event>): Stream<string> {
+  function runDriver(outgoing$: Stream<RunEvent>): Stream<string> {
     outgoing$.addListener({
       next: outgoing => {
         console.log('connecting to', outgoing);

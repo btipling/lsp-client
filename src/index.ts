@@ -5,7 +5,7 @@ import logger from './logger';
 import { ISinks } from './interfaces/sinks';
 import { ISources } from './interfaces/sources';
 import Connect from './connect';
-import { makeRunDriver } from './run';
+import { RunEvent, RunEventType, makeRunDriver } from './run';
 
 
 function view(connectDOM: Stream<VNode>): Stream<VNode> {
@@ -21,10 +21,14 @@ function view(connectDOM: Stream<VNode>): Stream<VNode> {
 
 function main(sources: ISources): ISinks {
 
-  let connect = Connect(sources);
+  const connect = Connect(sources);
+
+  const runEvent = connect.value.map(payload => {
+    return { payload, type: RunEventType.Initialize };
+  });
 
   return {
-    RUN: connect.value,
+    RUN: runEvent,
     DOM: view(connect.DOM),
   };
 }
