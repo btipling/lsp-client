@@ -1,7 +1,9 @@
-export type Logger = (level: number, ...msgs: any[]) => void;
+import { Stream } from "xstream";
+export type Logger = (messages$: Stream<LoggerMessage>) => void;
+export type LoggerMessage = { messages: Array<string>, level: number };
 
-export function info(logger: Logger, ...msgs: any[]) {
-  logger(levelToNumber('info'), ...msgs);
+export function info(msgs$: Stream<Array<string>>) {
+  return msgs$.map(messages => { return { messages, level: levelToNumber('info') }; });
 }
 
 function levelToNumber(level?: string): number {
@@ -15,11 +17,17 @@ function levelToNumber(level?: string): number {
 
 export default function logger(level: string): Logger {
   const levelIndex = levelToNumber(level);
-  return (levelNumber: number, ...msgs: any[]) => {
-    if (levelNumber > levelIndex) {
-      return;
-    }
-    // tslint:disable-next-line:no-console
-    console.log.apply(null, msgs);
+  return (messages$: Stream<LoggerMessage>) => {
+    messages$.addListener({
+      next: (messages: LoggerMessage) => {
+        if (messages.level > levelIndex) {
+          return;
+        }
+        // tslint:disable-next-line:no-console
+        console.log.apply(null, messages.messages);
+      },
+      error: () => {},
+      complete: () => {},
+    })
   };
 }

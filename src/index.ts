@@ -5,6 +5,7 @@ import logger from './logger';
 import { ISinks } from './interfaces/sinks';
 import { ISources } from './interfaces/sources';
 import Connect from './connect';
+import { makeRunDriver } from './run';
 
 
 function view(connectDOM: Stream<VNode>): Stream<VNode> {
@@ -23,6 +24,7 @@ function main(sources: ISources): ISinks {
   let connect = Connect(sources);
 
   return {
+    RUN: connect.value,
     DOM: view(connect.DOM),
   };
 }
@@ -30,6 +32,7 @@ function main(sources: ISources): ISinks {
 const drivers = {
   DOM: makeDOMDriver('#app'),
   LOGGER: logger('debug'),
+  RUN: makeRunDriver(),
 };
 
 run(main, drivers);

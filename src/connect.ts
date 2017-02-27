@@ -1,6 +1,6 @@
 import {div, input, VNode, DOMSource, button} from '@cycle/dom';
-import { ISinks } from './interfaces/sinks';
-import xs, { Stream } from 'xstream';
+import { IConnectSinks } from './interfaces/sinks';
+import { Stream } from 'xstream';
 
 
 function intent (DOM: DOMSource): Stream<string> {
@@ -28,10 +28,12 @@ function view (value$: Stream<string>): Stream<VNode> {
   );
 }
 
-export default function Connect (sources): ISinks {
+export default function Connect (sources): IConnectSinks {
   const change$ = intent(sources.DOM);
   const vtree$ = view(change$);
+  const value$ = change$.remember();
   return {
     DOM: vtree$,
+    value: value$,
   };
 }
