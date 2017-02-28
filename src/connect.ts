@@ -13,8 +13,8 @@ function intent (DOM: DOMSource): Stream<string> {
   const submitted$ = DOM.select('.connect-submit').events('click');
 
   return input$.map(inputVal => submitted$.map(() => inputVal)).flatten()
-  .startWith('Nothing')
-  .debug(msg => console.log(`msg ${msg}`));
+  .startWith('')
+  .debug(msg => console.log(`Connect to ${msg}`));
 }
 
 function view (value$: Stream<string>): Stream<VNode> {

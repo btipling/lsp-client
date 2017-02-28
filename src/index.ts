@@ -22,6 +22,9 @@ function view(connectDOM: Stream<VNode>): Stream<VNode> {
 function main(sources: ISources): ISinks {
 
   const connect = Connect(sources);
+  sources.RUN.addListener({
+    next: msg => console.log('Received message:', msg)
+  });
 
   const runEvent = connect.value.map(payload => {
     return { payload, type: RunEventType.Initialize };
