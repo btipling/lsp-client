@@ -11,3 +11,7 @@ export interface IConnectSinks {
   DOM: Stream<VNode>;
   value: Stream<any>;
 }
+
+export interface IInfoSinks {
+  DOM: Stream<VNode>;
+}
