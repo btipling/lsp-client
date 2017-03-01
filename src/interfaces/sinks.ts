@@ -1,6 +1,6 @@
 import { VNode } from '@cycle/dom';
 import { Stream } from 'xstream';
-import { RunEvent } from '../run';
+import { RunEvent } from '../drivers/run';
 
 export interface ISinks {
   DOM: Stream<VNode>;

@@ -1,28 +1,32 @@
-import xs, {Stream, Listener} from 'xstream';
 import { exec } from 'child_process';
-import {ChildProcess} from "child_process";
+import {ChildProcess} from 'child_process';
+import xs, {Listener, Stream} from 'xstream';
 
 export enum RunEventType {
   Action = 1,
   Initialize,
 }
+// tslint:disable-next-line:interface-over-type-literal
 export type RunEvent = { type: RunEventType, payload: string };
+// tslint:disable-next-line:interface-over-type-literal
 export type RunDriver = (outgoing$: Stream<RunEvent>) => Stream<string>;
 
 export function makeRunDriver(): RunDriver {
 
+  // tslint:disable-next-line:interface-over-type-literal
   type State = { listener: Listener<string>, connection: ChildProcess };
   const state: State = {
-    listener: null,
     connection: null,
+    listener: null,
   };
 
   const connectTo = (payload: string) => {
-    if (state.connection) {
+    if (state.connection && state.connection.disconnect) {
       state.connection.disconnect();
     }
     state.connection = exec(payload, (err: Error) => {
       if (err) {
+        // tslint:disable-next-line:no-console
         console.log('Run exec received an error', err);
         state.connection = null;
       }
@@ -70,6 +74,7 @@ export function makeRunDriver(): RunDriver {
             connectTo(payload);
             break;
           default:
+            // tslint:disable-next-line:no-console
             console.log('Unknown action type', type, payload);
             return;
         }

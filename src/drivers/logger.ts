@@ -1,9 +1,10 @@
-import { Stream } from "xstream";
+import { Stream } from 'xstream';
 export type Logger = (messages$: Stream<LoggerMessage>) => void;
-export type LoggerMessage = { messages: Array<string>, level: number };
+// tslint:disable-next-line:interface-over-type-literal
+export type LoggerMessage = { messages: string[], level: number };
 
-export function info(msgs$: Stream<Array<string>>) {
-  return msgs$.map(messages => { return { messages, level: levelToNumber('info') }; });
+export function info(msgs$: Stream<string[]>) {
+  return msgs$.map((messages) => ({ messages, level: levelToNumber('info') }));
 }
 
 function levelToNumber(level?: string): number {
@@ -28,6 +29,6 @@ export default function logger(level: string): Logger {
       },
       error: () => {},
       complete: () => {},
-    })
+    });
   };
 }

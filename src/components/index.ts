@@ -1,12 +1,11 @@
-import { h1, div, makeDOMDriver, VNode } from '@cycle/dom';
+import { div, h1, makeDOMDriver, VNode } from '@cycle/dom';
 import { run } from '@cycle/xstream-run';
 import xs, { Stream } from 'xstream';
-import logger from './logger';
-import { ISinks } from './interfaces/sinks';
-import { ISources } from './interfaces/sources';
+import logger from '../drivers/logger';
+import { makeRunDriver, RunEvent, RunEventType } from '../drivers/run';
+import { ISinks } from '../interfaces/sinks';
+import { ISources } from '../interfaces/sources';
 import Connect from './connect';
-import { RunEvent, RunEventType, makeRunDriver } from './run';
-
 
 function view(connectDOM: Stream<VNode>): Stream<VNode> {
   const interval$ =  xs.periodic(1000);
@@ -15,24 +14,27 @@ function view(connectDOM: Stream<VNode>): Stream<VNode> {
     div([
       h1(`${i} seconds elapsed`),
       connectVTree,
-    ])
-  )
+    ]),
+  );
 }
 
 function main(sources: ISources): ISinks {
 
   const connect = Connect(sources);
   sources.RUN.addListener({
-    next: msg => console.log('Received message:', msg)
+    next: (msg) => {
+      // tslint:disable-next-line:no-console
+      console.log('Received message:', msg);
+    },
   });
 
-  const runEvent = connect.value.map(payload => {
+  const runEvent = connect.value.map((payload) => {
     return { payload, type: RunEventType.Initialize };
   });
 
   return {
-    RUN: runEvent,
     DOM: view(connect.DOM),
+    RUN: runEvent,
   };
 }
 
