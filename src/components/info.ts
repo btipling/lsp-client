@@ -5,7 +5,7 @@ import {ISources} from '../interfaces/sources';
 
 function view(run$: Stream<string>): Stream<VNode> {
   return run$
-    .startWith('lolz')
+    .startWith('Input will appear here.')
     .map((value) =>
     pre(value),
   );
