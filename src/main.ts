@@ -1,7 +1,8 @@
 /* tslint:disable: no-var-requires */
-const { app, BrowserWindow } = require('electron');
+const { app, Menu, BrowserWindow, shell } = require('electron');
 const path = require('path');
 const url = require('url');
+const defaultMenu = require('electron-default-menu');
 
 let win;
 
@@ -17,6 +18,8 @@ function main() {
   win.on('closed', () => {
     win = null;
   });
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(defaultMenu(app, shell)));
 }
 
 app.on('ready', main);
@@ -32,3 +35,5 @@ app.on('activate', () => {
     main();
   }
 });
+
+
