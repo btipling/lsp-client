@@ -1,5 +1,5 @@
 import { pre, VNode} from '@cycle/dom';
-import { compose, concat, join, split, subtract, takeLast } from 'ramda';
+import { compose, concat, join, split, takeLast } from 'ramda';
 import { Stream } from 'xstream';
 import { IInfoSinks } from '../interfaces/sinks';
 import { ISources } from '../interfaces/sources';
