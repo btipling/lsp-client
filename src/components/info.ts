@@ -5,7 +5,7 @@ import { IInfoSinks } from '../interfaces/sinks';
 import { ISources } from '../interfaces/sources';
 
 function view(run$: Stream<string>): Stream<VNode> {
-  // Show last 100 lines of log messages from process stderr in a <pre>.
+  // Take stderr stream chunks and show last 100 lines of log messages in a <pre>.
   const splitter = '\n';
 
   const lineSplitter = split(splitter);
