@@ -18,8 +18,7 @@ function view(run$: Stream<string>): Stream<VNode> {
 }
 
 export default function Info(sources: ISources): IInfoSinks {
-  const vtree$ = view(sources.RUN);
   return {
-    DOM: vtree$,
+    DOM: view(sources.RUN),
   };
 }
