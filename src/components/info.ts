@@ -1,20 +1,25 @@
 import { pre, VNode} from '@cycle/dom';
-import { compose, concat, split, subtract, takeLast } from 'ramda';
+import { compose, concat, join, split, subtract, takeLast } from 'ramda';
 import { Stream } from 'xstream';
 import { IInfoSinks } from '../interfaces/sinks';
 import { ISources } from '../interfaces/sources';
 
 function view(run$: Stream<string>): Stream<VNode> {
-  const lineSplitter = split('\n');
+  // Show last 100 lines of log messages from process stderr in a <pre>.
+  const splitter = '\n';
+
+  const lineSplitter = split(splitter);
   const maxLines = takeLast(100);
   const messagesToDisplay = compose(maxLines, concat);
+
+  const combineLines = join(splitter);
+  const html = compose(pre, combineLines);
 
   return run$
     .startWith('Log messages will appear here.')
     .map(lineSplitter)
     .fold(messagesToDisplay, [])
-    .map((value) => pre(value.join('\n')),
-  );
+    .map(html);
 }
 
 export default function Info(sources: ISources): IInfoSinks {
