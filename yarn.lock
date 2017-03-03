@@ -57,6 +57,10 @@
   version "7.0.5"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.5.tgz#96a0f0a618b7b606f1ec547403c00650210bfbb7"
 
+"@types/ramda@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.0.3.tgz#683a3437d4446a4d21af473a9286e6950fa777c1"
+
 ansi-align@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/ansi-align/-/ansi-align-1.1.0.tgz#2f0c1658829739add5ebb15e6b0c6e3423f016ba"

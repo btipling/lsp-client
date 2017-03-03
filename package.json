@@ -18,6 +18,7 @@
     "@cycle/xstream-run": "^4.2.0",
     "@types/core-js": "^0.9.35",
     "@types/electron": "^1.4.32",
+    "@types/ramda": "^0.0.3",
     "electron": "^1.4.15",
     "electron-default-menu": "^1.0.0",
     "ramda": "^0.23.0",
