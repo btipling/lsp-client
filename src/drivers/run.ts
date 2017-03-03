@@ -6,15 +6,27 @@ export enum RunEventType {
   Action = 1,
   Initialize,
 }
-// tslint:disable-next-line:interface-over-type-literal
+
+export enum RunMessageType {
+  STD_OUT = 1,
+  STD_ERR,
+}
+
+export type RunMessage = { type: RunMessageType, message: string };
 export type RunEvent = { type: RunEventType, payload: string };
-// tslint:disable-next-line:interface-over-type-literal
-export type RunDriver = (outgoing$: Stream<RunEvent>) => Stream<string>;
+export type RunDriver = (outgoing$: Stream<RunEvent>) => Stream<RunMessage>;
+
+export const errMessage = (message: string) => {
+  return { type: RunMessageType.STD_ERR, message };
+};
+export const outMessage = (message: string) => {
+  return { type: RunMessageType.STD_OUT, message };
+};
 
 export function makeRunDriver(): RunDriver {
 
   // tslint:disable-next-line:interface-over-type-literal
-  type State = { listener: Listener<string>, connection: ChildProcess };
+  type State = { listener: Listener<RunMessage>, connection: ChildProcess };
   const state: State = {
     connection: null,
     listener: null,
@@ -35,13 +47,13 @@ export function makeRunDriver(): RunDriver {
       if (!state.listener) {
         return;
       }
-      state.listener.next(chunk);
+      state.listener.next(outMessage(chunk));
     });
     state.connection.stderr.on('data', (chunk: string) => {
       if (!state.listener) {
         return;
       }
-      state.listener.next(chunk);
+      state.listener.next(errMessage(chunk));
     });
   };
 
@@ -53,14 +65,14 @@ export function makeRunDriver(): RunDriver {
     con.stdin.write(payload);
   };
 
-  const connection = xs.create<string>({
-    start: (listener: Listener<string>) => {
+  const connection = xs.create<RunMessage>({
+    start: (listener: Listener<RunMessage>) => {
       state.listener = listener;
     },
     stop: () => {},
   });
 
-  function runDriver(outgoing$: Stream<RunEvent>): Stream<string> {
+  function runDriver(outgoing$: Stream<RunEvent>): Stream<RunMessage> {
     outgoing$.addListener({
       next: ({ type, payload }) => {
         if (!payload) {
