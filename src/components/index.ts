@@ -1,20 +1,20 @@
-import { div, h1, makeDOMDriver, VNode } from '@cycle/dom';
+import { div, makeDOMDriver, VNode } from '@cycle/dom';
 import { run } from '@cycle/xstream-run';
 import xs, { Stream } from 'xstream';
 import logger from '../drivers/logger';
-import { makeRunDriver, RunEvent, RunEventType } from '../drivers/run';
+import { makeRunDriver, RunEventType } from '../drivers/run';
 import { ISinks } from '../interfaces/sinks';
 import { ISources } from '../interfaces/sources';
 import Connect from './connect';
 import Info from './info';
+import Response from './response';
 
-function view(connectDOM$: Stream<VNode>, info$: Stream<VNode>): Stream<VNode> {
-  const interval$ =  xs.periodic(1000);
-  return xs.combine(connectDOM$, info$, interval$)
-  .map(([connectVTree, infoVTree, i]) =>
+function view(connectDOM$: Stream<VNode>, info$: Stream<VNode>, response$: Stream<VNode>): Stream<VNode> {
+  return xs.combine(connectDOM$, info$, response$)
+  .map(([ connectVTree, infoVTree, responseVTree ]) =>
     div([
-      h1(`${i} seconds elapsed`),
       connectVTree,
+      responseVTree,
       infoVTree,
     ]),
   );
@@ -28,7 +28,7 @@ function main(sources: ISources): ISinks {
   });
 
   return {
-    DOM: view(connect.DOM, Info(sources).DOM),
+    DOM: view(connect.DOM, Info(sources).DOM, Response(sources).DOM),
     RUN: runEvent,
   };
 }

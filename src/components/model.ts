@@ -1,10 +1,11 @@
 import { compose, concat, join, split, takeLast } from 'ramda';
 import { Stream } from 'xstream';
-import { errMessage, RunMessage, RunMessageType } from '../drivers/run';
+import { errMessage, RunMessage } from '../drivers/run';
 
-export function runMessageToLines(messages$: Stream<RunMessage>): Stream<string> {
-  // Take stderr stream chunks and show last 100 lines of log messages in a <pre>.
-  const errorsOnly = (message: RunMessage) => message.type === RunMessageType.STD_ERR;
+type MessageFilter = (m: RunMessage) => boolean;
+
+export function runMessageToLines(messages$: Stream<RunMessage>, messageFilter: MessageFilter): Stream<string> {
+  // Take a run message stream chunks and show last 100 lines of log messages in a <pre>.
 
   const splitter = '\n';
   const messageOnly = (message: RunMessage) => message.message;
@@ -17,7 +18,7 @@ export function runMessageToLines(messages$: Stream<RunMessage>): Stream<string>
   const combineLines = join(splitter);
   return messages$
     .startWith(errMessage('Log messages will appear here.'))
-    .filter(errorsOnly)
+    .filter(messageFilter)
     .map(formatMessage)
     .fold(messagesToDisplay, [])
     .map(combineLines);
