@@ -5,17 +5,14 @@ import { IConnectSinks } from '../interfaces/sinks';
 export type ConnectStream = { value: string, submitEvent: Event };
 
 function intent(DOM: DOMSource): Stream<ConnectStream> {
-
   const input$ = DOM.select('.connect-path').events('keyup')
-  .map((ev) => {
-    return ((ev as Event).target as HTMLInputElement).value;
-  });
+    .map(ev => ((ev as Event).target as HTMLInputElement).value);
 
   const submitted$ = DOM.select('.connect-form').events('submit');
 
   return input$
     .map((value) => submitted$.map((submitEvent) => ({ value, submitEvent }))).flatten()
-  .startWith({ value: '', submitEvent: null });
+    .startWith({ value: '', submitEvent: null });
 }
 
 function view(connect$: Stream<ConnectStream>): Stream<VNode> {
