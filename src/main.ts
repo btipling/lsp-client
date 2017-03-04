@@ -1,5 +1,6 @@
 /* tslint:disable: no-var-requires */
-const { app, Menu, BrowserWindow, shell } = require('electron');
+const electron = require('electron');
+const { app, Menu, BrowserWindow, shell } = electron;
 const path = require('path');
 const url = require('url');
 const defaultMenu = require('electron-default-menu');
@@ -7,7 +8,9 @@ const defaultMenu = require('electron-default-menu');
 let win;
 
 function main() {
-  win = new BrowserWindow({width: 800, height: 600});
+  const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize;
+  win = new BrowserWindow({ width: width, height: height });
+  win.webContents.openDevTools();
 
   win.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),

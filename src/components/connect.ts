@@ -1,23 +1,26 @@
-import {button, div, DOMSource, input, VNode} from '@cycle/dom';
-import { Stream } from 'xstream';
+import { button, div, DOMSource, form, input, VNode } from '@cycle/dom';
+import xs, { Stream } from 'xstream';
 import { IConnectSinks } from '../interfaces/sinks';
 
-function intent(DOM: DOMSource): Stream<string> {
+export type ConnectStream = { value: string, submitEvent: Event };
+
+function intent(DOM: DOMSource): Stream<ConnectStream> {
 
   const input$ = DOM.select('.connect-path').events('keyup')
   .map((ev) => {
     return ((ev as Event).target as HTMLInputElement).value;
   });
 
-  const submitted$ = DOM.select('.connect-submit').events('click');
+  const submitted$ = DOM.select('.connect-form').events('submit');
 
-  return input$.map((inputVal) => submitted$.map(() => inputVal)).flatten()
-  .startWith('');
+  return input$
+    .map((value) => submitted$.map((submitEvent) => ({ value, submitEvent }))).flatten()
+  .startWith({ value: '', submitEvent: null });
 }
 
-function view(value$: Stream<string>): Stream<VNode> {
-  return value$.map((value) =>
-    div([
+function view(connect$: Stream<ConnectStream>): Stream<VNode> {
+  return connect$.map(({ value }) =>
+    form('.connect-form', [
       'Connect path',
       input('.connect-path'),
       button('.connect-submit', 'connect'),
@@ -27,11 +30,10 @@ function view(value$: Stream<string>): Stream<VNode> {
 }
 
 export default function Connect(sources): IConnectSinks {
-  const change$ = intent(sources.DOM);
-  const vtree$ = view(change$);
-  const value$ = change$.remember();
+  const connect$ = intent(sources.DOM).remember();
+  const vtree$ = view(connect$);
   return {
     DOM: vtree$,
-    value: value$,
+    connect: connect$,
   };
 }
