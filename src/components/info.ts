@@ -1,6 +1,6 @@
-import { pre, VNode} from '@cycle/dom';
+import { pre, VNode } from '@cycle/dom';
 import xs, { Stream } from 'xstream';
-import {RunMessage, RunMessageType} from '../drivers/run';
+import { RunMessage, RunMessageType } from '../drivers/run';
 import { IInfoSinks } from '../interfaces/sinks';
 import { ISources } from '../interfaces/sources';
 import { runMessageToLines } from './model';

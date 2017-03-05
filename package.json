@@ -28,6 +28,7 @@
     "tachyons": "^4.6.2",
     "tachyons-flexbox": "^2.0.4",
     "tslint": "^4.4.2",
+    "tslint-eslint-rules": "^3.4.0",
     "typescript": "^2.1.6",
     "xstream": "^10.2.0"
   }
