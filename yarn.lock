@@ -1339,6 +1339,10 @@ symbol-observable@^1.0.1, symbol-observable@^1.0.2:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.0.4.tgz#29bf615d4aa7121bdd898b22d4b3f9bc4e2aa03d"
 
+tachyons-flexbox@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/tachyons-flexbox/-/tachyons-flexbox-2.0.4.tgz#69aa6469bdcba012de5dc29eecd1ac8476eff024"
+
 tachyons@^4.6.2:
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/tachyons/-/tachyons-4.6.2.tgz#cf006fd516763e735b33565fc21b8b3616a012c8"

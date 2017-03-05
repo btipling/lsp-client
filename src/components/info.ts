@@ -5,7 +5,8 @@ import { IInfoSinks } from '../interfaces/sinks';
 import { ISources } from '../interfaces/sources';
 import { runMessageToLines } from './model';
 
-const view = (lines$: Stream<string>): Stream<VNode> => lines$.map(pre);
+const linesToPre = (line) => pre('.flex-auto .ba .bw2', line);
+const view = (lines$: Stream<string>): Stream<VNode> => lines$.map(linesToPre);
 
 export default function Info(sources: ISources): IInfoSinks {
 

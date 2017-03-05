@@ -13,10 +13,12 @@ import Response from './response';
 function view(connectDOM$: Stream<VNode>, info$: Stream<VNode>, response$: Stream<VNode>): Stream<VNode> {
   return xs.combine(connectDOM$, info$, response$)
   .map(([ connectVTree, infoVTree, responseVTree ]) =>
-    div([
+    div('.h-100', [
       connectVTree,
-      responseVTree,
-      infoVTree,
+      div('.flex .flex-column h-100', [
+        responseVTree,
+        infoVTree,
+      ]),
     ]),
   );
 }
