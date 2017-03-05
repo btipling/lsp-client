@@ -1,5 +1,6 @@
 import { div, makeDOMDriver, VNode } from '@cycle/dom';
 import { run } from '@cycle/xstream-run';
+import { prop } from 'ramda';
 import xs, { Stream } from 'xstream';
 import logger from '../drivers/logger';
 import { preventDefault } from '../drivers/prevent-default';
@@ -27,17 +28,19 @@ function view(connectDOM$: Stream<VNode>, info$: Stream<VNode>, response$: Strea
 function main(sources: ISources): ISinks {
   const connect = Connect(sources);
 
-  const runEvent = connect.connect.map(({ value }) => {
-    return { payload: value, type: RunEventType.Initialize };
+  const runEvent = connect.connect.map(({ value, type }) => {
+    console.log('got value', value, type);
+    return { payload: value, type };
   });
 
   const info = Info(sources);
   const responses = Response(sources);
+  const getEvent: (ConnectStream) => Event = prop('event');
 
   return {
     DOM: view(connect.DOM, info.DOM, responses.DOM),
     RUN: runEvent,
-    preventDefault: connect.connect.map(({ submitEvent }) => submitEvent),
+    preventDefault: connect.connect.map(getEvent),
     STICKY_SCROLL: info.STICKY_SCROLL,
   };
 }

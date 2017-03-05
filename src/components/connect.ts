@@ -1,25 +1,32 @@
 import { button, DOMSource, form, input, VNode } from '@cycle/dom';
 import { always, compose, contains, equals, flip, ifElse, or, prop, values } from 'ramda';
-import { Stream } from 'xstream';
-import { RunEvent, RunMessage, RunMessageType } from '../drivers/run';
+import xs, { Stream } from 'xstream';
+import { RunEvent, RunEventType, RunMessage, RunMessageType } from '../drivers/run';
 import { IConnectSinks } from '../interfaces/sinks';
 
-export type ConnectStream = { value: string, submitEvent: Event };
+export type ConnectStream = { value: string, event: Event, type: RunEventType };
 
 function intent(DOM: DOMSource): Stream<ConnectStream> {
   // Gets input value and submit event from DOM.
+  const { Connect, Disconnect } = RunEventType;
 
   const input$ = DOM.select('.connect-path').events('keyup');
-  const submitted$ = DOM.select('.connect-form').events('submit');
+  const submit$ = DOM.select('.connect-form').events('submit');
+  const disconnectButtonClick$ = DOM.select('.connect-disconnect').events('click');
 
   const eventToValue = (ev) => ((ev as Event).target as HTMLInputElement).value;
-  const combineValueAndSubmitEvent = (value) => submitted$.map((submitEvent) => ({ value, submitEvent }));
+  const combineValueAndSubmitEvent = (value) => submit$.map((submitEvent) => ({ value, event, type: Connect }));
 
-  return input$
+  const connect$ = input$
     .map(eventToValue)
     .map(combineValueAndSubmitEvent)
-    .flatten()
-    .startWith({ value: '', submitEvent: null });
+    .flatten();
+
+  const disconnect$ = disconnectButtonClick$
+    .map((event) => ({ value: '', event, type: Disconnect }));
+
+  return xs.merge<ConnectStream>(connect$, disconnect$)
+    .startWith({ value: '', event: null, type: RunEventType.Noop });
 }
 
 function view(connect$: Stream<RunEvent>): Stream<VNode> {
@@ -39,6 +46,7 @@ function view(connect$: Stream<RunEvent>): Stream<VNode> {
       'Connect path: ',
       input('.Connect-connect-path .connect-path'),
       button('.Connect-connect-submit .connect-submit', 'connect'),
+      button('.Connect-disconnect .connect-disconnect', 'disconnect'),
       ` ${connectionState}`,
     ]),
   );

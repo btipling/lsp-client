@@ -4,7 +4,9 @@ import xs, { Listener, Stream } from 'xstream';
 
 export enum RunEventType {
   Action = 1,
-  Initialize,
+  Connect,
+  Disconnect,
+  Noop,
 }
 
 export enum RunMessageType {
@@ -41,9 +43,14 @@ export function makeRunDriver(): RunDriver {
   };
 
   const connectTo = (payload: string) => {
+    if (!payload) {
+      return;
+    }
+
     if (state.connection && state.connection.disconnect) {
       state.connection.disconnect();
     }
+
     state.connection = exec(payload, (err: Error) => {
       state.listener.next(disconnectedMessage());
       if (err) {
@@ -61,6 +68,7 @@ export function makeRunDriver(): RunDriver {
       }
       state.listener.next(outMessage(chunk));
     });
+
     state.connection.stderr.on('data', (chunk: string) => {
       if (!state.listener) {
         return;
@@ -71,6 +79,9 @@ export function makeRunDriver(): RunDriver {
 
   const writeToConnection = (payload: string) => {
     if (!state.connection) {
+      return;
+    }
+    if (!payload) {
       return;
     }
     const con: ChildProcess = state.connection;
@@ -84,18 +95,29 @@ export function makeRunDriver(): RunDriver {
     stop: () => {},
   });
 
+  const disconnect = () => {
+    if (!state.connection) {
+      return;
+    }
+    // Todo: send a proper LSP exit.
+    state.connection.kill();
+  };
+
   function runDriver(outgoing$: Stream<RunEvent>): Stream<RunMessage> {
     outgoing$.addListener({
       next: ({ type, payload }) => {
-        if (!payload) {
-          return;
-        }
         switch (type) {
           case RunEventType.Action:
             writeToConnection(payload);
             break;
-          case RunEventType.Initialize:
+          case RunEventType.Connect:
             connectTo(payload);
+            break;
+          case RunEventType.Disconnect:
+            disconnect();
+            break;
+          case RunEventType.Noop:
+            // Do nothing.
             break;
           default:
             // tslint:disable-next-line:no-console
