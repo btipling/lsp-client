@@ -1,4 +1,4 @@
-import { button, div, DOMSource, form, input, VNode } from '@cycle/dom';
+import { button, DOMSource, form, input, VNode } from '@cycle/dom';
 import { Stream } from 'xstream';
 import { IConnectSinks } from '../interfaces/sinks';
 
@@ -23,12 +23,11 @@ function intent(DOM: DOMSource): Stream<ConnectStream> {
 function view(connect$: Stream<ConnectStream>): Stream<VNode> {
   // Creates connection input form.
 
-  return connect$.map(({ value }) =>
-    form('.connect-form', [
-      'Connect path',
-      input('.connect-path'),
-      button('.connect-submit', 'connect'),
-      div(`value: '${value}'`),
+  return connect$.map(() =>
+    form('.Connect .connect-form', [
+      'Connect path: ',
+      input('.Connect-connect-path .connect-path'),
+      button('.Connect-connect-submit .connect-submit', 'connect'),
     ]),
   );
 }

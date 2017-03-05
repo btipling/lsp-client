@@ -1,4 +1,4 @@
-import { VNode } from '@cycle/dom';
+import { DOMSource, VNode } from '@cycle/dom';
 import { Stream } from 'xstream';
 import { ConnectStream } from '../components/connect';
 import { RunEvent } from '../drivers/run';
@@ -7,6 +7,7 @@ export interface ISinks {
   DOM: Stream<VNode>;
   RUN: Stream<RunEvent>;
   preventDefault: Stream<Event>;
+  STICKY_SCROLL: Stream<DOMSource>;
 }
 
 export interface IConnectSinks {
@@ -16,4 +17,5 @@ export interface IConnectSinks {
 
 export interface IInfoSinks {
   DOM: Stream<VNode>;
+  STICKY_SCROLL: Stream<DOMSource>;
 }

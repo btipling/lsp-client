@@ -19,7 +19,11 @@ export function runMessageToLines(messages$: Stream<RunMessage>, messageFilter: 
   return messages$
     .startWith(errMessage('Log messages will appear here.'))
     .filter(messageFilter)
-    .map(formatMessage)
+    .map((msg) => {
+      return formatMessage(msg);
+    })
     .fold(messagesToDisplay, [])
-    .map(combineLines);
+    .map((msg) => {
+      return combineLines(msg);
+    });
 }

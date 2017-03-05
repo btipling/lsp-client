@@ -4,6 +4,7 @@ import xs, { Stream } from 'xstream';
 import logger from '../drivers/logger';
 import { preventDefault } from '../drivers/prevent-default';
 import { makeRunDriver, RunEventType } from '../drivers/run';
+import { stickyScroll } from '../drivers/sticky-scroll.ts';
 import { ISinks } from '../interfaces/sinks';
 import { ISources } from '../interfaces/sources';
 import Connect from './connect';
@@ -15,7 +16,7 @@ function view(connectDOM$: Stream<VNode>, info$: Stream<VNode>, response$: Strea
   .map(([ connectVTree, infoVTree, responseVTree ]) =>
     div('.h-100', [
       connectVTree,
-      div('.flex .flex-column h-100', [
+      div('.h-100', [
         responseVTree,
         infoVTree,
       ]),
@@ -30,10 +31,14 @@ function main(sources: ISources): ISinks {
     return { payload: value, type: RunEventType.Initialize };
   });
 
+  const info = Info(sources);
+  const responses = Response(sources);
+
   return {
-    DOM: view(connect.DOM, Info(sources).DOM, Response(sources).DOM),
+    DOM: view(connect.DOM, info.DOM, responses.DOM),
     RUN: runEvent,
     preventDefault: connect.connect.map(({ submitEvent }) => submitEvent),
+    STICKY_SCROLL: info.STICKY_SCROLL,
   };
 }
 
@@ -41,6 +46,7 @@ const drivers = {
   DOM: makeDOMDriver('#app'),
   LOGGER: logger('debug'),
   RUN: makeRunDriver(),
+  STICKY_SCROLL: stickyScroll,
   preventDefault,
 };
 

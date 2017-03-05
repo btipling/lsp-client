@@ -7,8 +7,9 @@
     "build-main": "yarn tsc -- --sourceMap --outFile ./main.js ./src/main.ts",
     "build-index": "yarn tsc -- -p tsconfig.json",
     "run-electron": "yarn electron .",
+    "styles": "yarn run stylus -- stylus/main.styl -o dist",
     "debug": "yarn build-index",
-    "build": "yarn lint && yarn build-main && yarn debug",
+    "build": "yarn run styles && yarn lint && yarn build-main && yarn debug",
     "start": "yarn build && yarn debug"
   },
   "dependencies": {
@@ -23,6 +24,7 @@
     "electron-default-menu": "^1.0.0",
     "ramda": "^0.23.0",
     "rxjs": "^5.1.1",
+    "stylus": "^0.54.5",
     "tachyons": "^4.6.2",
     "tachyons-flexbox": "^2.0.4",
     "tslint": "^4.4.2",
