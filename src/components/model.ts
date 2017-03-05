@@ -12,7 +12,7 @@ export function runMessageToLines(messages$: Stream<RunMessage>, messageFilter: 
   const lineSplitter = split(splitter);
   const formatMessage = compose(lineSplitter, messageOnly);
 
-  const maxLines: (messages: string[]) => string[] = takeLast(100);
+  const maxLines: (messages: string[]) => string[] = takeLast(500);
   const messagesToDisplay = compose(maxLines, concat as (a: string[], b: string[]) => string[]);
 
   const combineLines = join(splitter);

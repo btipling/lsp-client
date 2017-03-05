@@ -4,7 +4,7 @@ import xs, { Stream } from 'xstream';
 import logger from '../drivers/logger';
 import { preventDefault } from '../drivers/prevent-default';
 import { makeRunDriver, RunEventType } from '../drivers/run';
-import { stickyScroll } from '../drivers/sticky-scroll.ts';
+import { stickyScroll } from '../drivers/sticky-scroll';
 import { ISinks } from '../interfaces/sinks';
 import { ISources } from '../interfaces/sources';
 import Connect from './connect';
