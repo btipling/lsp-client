@@ -53,16 +53,11 @@ function connectStorageModel(connect$: Stream<ConnectStream>): Stream<{[index: s
 
 function main(sources: ISources): ISinks {
   const connect = Connect(sources);
-
-  const runEvent = connect.connect.map(({ value, type }) => {
-    console.log('got value', value, type);
-    return { payload: value, type };
-  });
-
   const info = Info(sources);
   const responses = Response(sources);
-  const getEvent: (c: ConnectStream) => Event = prop('event');
 
+  const runEvent = connect.connect.map(({ value, type }) => ({ payload: value, type }));
+  const getEvent: (c: ConnectStream) => Event = prop('event');
   const connectStorage$ = connectStorageModel(connect.connect);
 
   return {
