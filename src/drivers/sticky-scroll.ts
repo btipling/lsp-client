@@ -1,7 +1,7 @@
 import { DOMSource } from '@cycle/dom';
 import xs, { Stream } from 'xstream';
 
-export function stickyScroll(incoming$: Stream<DOMSource>) {
+export function stickyScroll(incoming$: Stream<DOMSource>): Stream<any> {
   // Scrolls element with new events to the bottom.
 
   const domSourceToElements = (domSource) => domSource.elements();

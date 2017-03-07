@@ -8,6 +8,7 @@ export interface ISinks {
   RUN: Stream<RunEvent>;
   preventDefault: Stream<Event>;
   STICKY_SCROLL: Stream<DOMSource>;
+  storage: Stream<{[index: string]: string; }>;
 }
 
 export interface IConnectSinks {

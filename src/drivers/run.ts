@@ -20,16 +20,16 @@ export type RunMessage = { type: RunMessageType, message: string };
 export type RunEvent = { type: RunEventType, payload: string };
 export type RunDriver = (outgoing$: Stream<RunEvent>) => Stream<RunMessage>;
 
-export function errMessage(message: string) {
+export function errMessage(message: string): RunMessage {
   return { type: RunMessageType.STD_ERR, message };
 }
-export function outMessage(message: string) {
+export function outMessage(message: string): RunMessage {
   return { type: RunMessageType.STD_OUT, message };
 }
-export function connectMessage() {
+export function connectMessage(): RunMessage {
   return { type: RunMessageType.CONNECTED, message: '' };
 }
-export function disconnectedMessage() {
+export function disconnectedMessage(): RunMessage {
   return { type: RunMessageType.DISCONNECTED, message: '' };
 }
 

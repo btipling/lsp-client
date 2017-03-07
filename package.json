@@ -16,6 +16,7 @@
     "@cycle/base": "^4.3.0",
     "@cycle/dom": "^14.3.0",
     "@cycle/rxjs-run": "^3.3.0",
+    "@cycle/storage": "^3.0.0",
     "@cycle/xstream-run": "^4.2.0",
     "@types/core-js": "^0.9.35",
     "@types/electron": "^1.4.32",

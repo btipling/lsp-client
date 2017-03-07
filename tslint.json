@@ -4,6 +4,14 @@
     "tslint-eslint-rules"
   ],
   "rules": {
+    "typedef": [true,
+      "call-signature",
+      "parameter",
+      "property-declaration",
+      "member-variable-declaration",
+      "object-destructuring",
+      "array-destructuring"
+    ],
     "object-curly-spacing": [ true, "always" ],
     "array-bracket-spacing": [ true, "always" ],
     "curly": true,

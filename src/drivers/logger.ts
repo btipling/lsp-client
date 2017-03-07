@@ -3,7 +3,7 @@ export type Logger = (messages$: Stream<LoggerMessage>) => void;
 // tslint:disable-next-line:interface-over-type-literal
 export type LoggerMessage = { messages: string[], level: number };
 
-export function info(msgs$: Stream<string[]>) {
+export function info(msgs$: Stream<string[]>): Stream<LoggerMessage> {
   return msgs$.map((messages) => ({ messages, level: levelToNumber('info') }));
 }
 

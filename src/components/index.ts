@@ -1,6 +1,7 @@
 import { div, makeDOMDriver, VNode } from '@cycle/dom';
+import storageDriver from '@cycle/storage';
 import { run } from '@cycle/xstream-run';
-import { prop } from 'ramda';
+import { append, both, compose, equals, flip, is, length, lt, prop, zipObj } from 'ramda';
 import xs, { Stream } from 'xstream';
 import logger from '../drivers/logger';
 import { preventDefault } from '../drivers/prevent-default';
@@ -8,7 +9,7 @@ import { makeRunDriver, RunEventType } from '../drivers/run';
 import { stickyScroll } from '../drivers/sticky-scroll';
 import { ISinks } from '../interfaces/sinks';
 import { ISources } from '../interfaces/sources';
-import Connect from './connect';
+import Connect, { ConnectStream } from './connect';
 import Info from './info';
 import Response from './response';
 
@@ -25,6 +26,31 @@ function view(connectDOM$: Stream<VNode>, info$: Stream<VNode>, response$: Strea
   );
 }
 
+function connectStorageModel(connect$: Stream<ConnectStream>): Stream<{[index: string]: string; }> {
+  // Filter to get connection ConnectStream events.
+  const getType: (c: ConnectStream) => RunEventType = prop('type');
+  const isConnection = equals(RunEventType.Connect);
+  const getConnections = compose(isConnection, getType);
+
+  // Filter out undefined or invalid values
+  const getConnectionValueString = prop('value');
+  const isString = is(String);
+  const minLength = lt(5);
+  const isMinLength = compose(minLength, length);
+  const isValid = compose(both(isMinLength, isString), getConnectionValueString);
+
+  // Maps connection ConnectStream events to storageDriver { target: 'local', key: 'connectionString', value }.
+  const toStoreObj: (a: string[]) => { [name: string]: string } = zipObj([ 'target', 'key', 'value' ]);
+  const storeValues = flip(append)([ 'local', 'connectionString' ]);
+  const mapToStore = compose(toStoreObj, storeValues, getConnectionValueString);
+
+  // Apply previous connect events filter and storage map to ConnectStream events.
+  return connect$
+    .filter(getConnections)
+    .filter(isValid)
+    .map(mapToStore);
+}
+
 function main(sources: ISources): ISinks {
   const connect = Connect(sources);
 
@@ -35,13 +61,16 @@ function main(sources: ISources): ISinks {
 
   const info = Info(sources);
   const responses = Response(sources);
-  const getEvent: (ConnectStream) => Event = prop('event');
+  const getEvent: (c: ConnectStream) => Event = prop('event');
+
+  const connectStorage$ = connectStorageModel(connect.connect);
 
   return {
     DOM: view(connect.DOM, info.DOM, responses.DOM),
     RUN: runEvent,
     preventDefault: connect.connect.map(getEvent),
     STICKY_SCROLL: info.STICKY_SCROLL,
+    storage: connectStorage$,
   };
 }
 
@@ -51,6 +80,7 @@ const drivers = {
   RUN: makeRunDriver(),
   STICKY_SCROLL: stickyScroll,
   preventDefault,
+  storage: storageDriver,
 };
 
 run(main, drivers);

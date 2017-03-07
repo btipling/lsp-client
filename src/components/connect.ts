@@ -3,10 +3,11 @@ import { always, compose, contains, equals, flip, ifElse, or, prop, values } fro
 import xs, { Stream } from 'xstream';
 import { RunEvent, RunEventType, RunMessage, RunMessageType } from '../drivers/run';
 import { IConnectSinks } from '../interfaces/sinks';
+import { ISources } from '../interfaces/sources';
 
 export type ConnectStream = { value: string, event: Event, type: RunEventType };
 
-function intent(DOM: DOMSource): Stream<ConnectStream> {
+function intent(DOM: DOMSource, storage$: Stream<string>): Stream<ConnectStream> {
   // Gets input value and submit event from DOM.
   const { Connect, Disconnect } = RunEventType;
 
@@ -29,7 +30,7 @@ function intent(DOM: DOMSource): Stream<ConnectStream> {
     .startWith({ value: '', event: null, type: RunEventType.Noop });
 }
 
-function view(connect$: Stream<RunEvent>): Stream<VNode> {
+function view(connect$: Stream<RunMessage>): Stream<VNode> {
   // Creates connection input form.
 
   const { CONNECTED, DISCONNECTED } = RunMessageType;
@@ -52,8 +53,8 @@ function view(connect$: Stream<RunEvent>): Stream<VNode> {
   );
 }
 
-export default function Connect(sources): IConnectSinks {
-  const connect$ = intent(sources.DOM).remember();
+export default function Connect(sources: ISources): IConnectSinks {
+  const connect$ = intent(sources.DOM, sources.storage).remember();
   const vtree$ = view(sources.RUN);
   return {
     DOM: vtree$,

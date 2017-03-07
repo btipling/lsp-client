@@ -7,4 +7,5 @@ export interface ISources {
   DOM: DOMSource;
   LOGGER: Logger;
   RUN: Stream<RunMessage>;
+  storage: Stream<string>;
 }
