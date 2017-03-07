@@ -1,7 +1,7 @@
 import { button, DOMSource, form, input, VNode } from '@cycle/dom';
 import { always, compose, contains, equals, flip, head, ifElse, or, prop, values } from 'ramda';
 import xs, { Stream } from 'xstream';
-import { RunEvent, RunEventType, RunMessage, RunMessageType } from '../drivers/run';
+import { RunEventType, RunMessage, RunMessageType } from '../drivers/run';
 import { IConnectSinks } from '../interfaces/sinks';
 import { ISources } from '../interfaces/sources';
 
