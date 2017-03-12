@@ -5,7 +5,7 @@ import { RunEventType, RunMessage, RunMessageType } from '../drivers/run';
 import { IConnectSinks } from '../interfaces/sinks';
 import { ISources } from '../interfaces/sources';
 
-export type ConnectStream = { value: string, event: Event, type: RunEventType };
+export type ConnectStream = { value: string, event: Event|null, type: RunEventType };
 
 function intent(DOM: DOMSource): Stream<ConnectStream> {
   // Gets input value and submit event from DOM.
@@ -50,7 +50,7 @@ function view(connect$: Stream<RunMessage>, storage: any): Stream<VNode> {
 
   return xs.combine(connectionState$, storage.local.getItem('connectionString'))
     .map(([ connectionState, connectionString ]) =>
-    form('.Connect .connect-form', [
+    form('.Connect .connect-form .w-100', [
       'Connect path: ',
       input('.Connect-connect-path .connect-path', { attrs: { type: 'text', value: connectionString } }),
       button('.Connect-connect-submit .connect-submit', 'connect'),

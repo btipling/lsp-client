@@ -6,7 +6,7 @@ import { ISources } from '../interfaces/sources';
 import { runMessageToLines } from './model';
 
 export default function Response(sources: ISources): IInfoSinks {
-  const linesToPre = (line) => pre('.Response .h-50 .ba', line);
+  const linesToPre = (line) => pre('.Response .h-50 .mb2 .ba', line);
   const view = (lines$: Stream<string>): Stream<VNode> => lines$.map(linesToPre);
 
   const errorsOnly = (message: RunMessage) => message.type === RunMessageType.STD_OUT;

@@ -36,7 +36,7 @@ export function disconnectedMessage(): RunMessage {
 export function makeRunDriver(): RunDriver {
 
   // tslint:disable-next-line:interface-over-type-literal
-  type State = { listener: Listener<RunMessage>, connection: ChildProcess };
+  type State = { listener: Listener<RunMessage>|null, connection: ChildProcess|null };
   const state: State = {
     connection: null,
     listener: null,
@@ -52,6 +52,9 @@ export function makeRunDriver(): RunDriver {
     }
 
     state.connection = exec(payload, (err: Error) => {
+      if (state.listener === null) {
+        return;
+      }
       state.listener.next(disconnectedMessage());
       if (err) {
         // tslint:disable-next-line:no-console
@@ -60,7 +63,9 @@ export function makeRunDriver(): RunDriver {
       }
       console.log('connected');
     });
-    state.listener.next(connectMessage());
+    if (state.listener) {
+      state.listener.next(connectMessage());
+    }
 
     state.connection.stdout.on('data', (chunk: string) => {
       if (!state.listener) {

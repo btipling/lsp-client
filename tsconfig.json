@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "strictNullChecks": true,
     "moduleResolution": "node",
     "module": "commonjs",
     "outDir": "dist",

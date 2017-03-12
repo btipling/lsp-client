@@ -20,3 +20,7 @@ export interface IInfoSinks {
   DOM: Stream<VNode>;
   STICKY_SCROLL: Stream<DOMSource>;
 }
+
+export interface IDOMOnlySinks {
+  DOM: Stream<VNode>;
+}

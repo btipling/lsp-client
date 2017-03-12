@@ -1,4 +1,4 @@
-import { DOMSource } from '@cycle/dom/xstream-typings';
+import { DOMSource } from '@cycle/dom';
 import { Stream } from 'xstream';
 import { Logger } from '../drivers/logger';
 import { RunMessage } from '../drivers/run';

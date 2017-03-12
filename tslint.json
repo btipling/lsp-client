@@ -8,9 +8,7 @@
       "call-signature",
       "parameter",
       "property-declaration",
-      "member-variable-declaration",
-      "object-destructuring",
-      "array-destructuring"
+      "member-variable-declaration"
     ],
     "object-curly-spacing": [ true, "always" ],
     "array-bracket-spacing": [ true, "always" ],

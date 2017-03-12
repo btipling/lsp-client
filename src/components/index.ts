@@ -11,19 +11,43 @@ import { ISinks } from '../interfaces/sinks';
 import { ISources } from '../interfaces/sources';
 import Connect, { ConnectStream } from './connect';
 import Info from './info';
+import MessageSelectors from './message-selector';
+import ParamInput from './param-input';
 import Response from './response';
 
-function view(connectDOM$: Stream<VNode>, info$: Stream<VNode>, response$: Stream<VNode>): Stream<VNode> {
-  return xs.combine(connectDOM$, info$, response$)
-  .map(([ connectVTree, infoVTree, responseVTree ]) =>
-    div('.h-100', [
+function view(
+    connect$: Stream<VNode>,
+    info$: Stream<VNode>,
+    response$: Stream<VNode>,
+    message$: Stream<VNode>,
+    params$: Stream<VNode>,
+  ): Stream<VNode> {
+  return xs.combine(
+    connect$,
+    info$,
+    response$,
+    message$,
+    params$,
+  )
+    .map(([
       connectVTree,
+      infoVTree,
+      responseVTree,
+      messageSelVTree,
+      paramVTree,
+    ]) =>
       div('.h-100', [
-        responseVTree,
-        infoVTree,
+        div('.fl .h-100 .w-50 .pa2', [
+          connectVTree,
+          responseVTree,
+          infoVTree,
+        ]),
+        div('.fl .h-100 .w-50 .pa2', [
+          paramVTree,
+          messageSelVTree,
+        ]),
       ]),
-    ]),
-  );
+    );
 }
 
 function connectStorageModel(connect$: Stream<ConnectStream>): Stream<{[index: string]: string; }> {
@@ -55,13 +79,23 @@ function main(sources: ISources): ISinks {
   const connect = Connect(sources);
   const info = Info(sources);
   const responses = Response(sources);
+  const messageSelectors = MessageSelectors(sources);
+  const paramInput = ParamInput(sources);
 
   const runEvent = connect.connect.map(({ value, type }) => ({ payload: value, type }));
   const getEvent: (c: ConnectStream) => Event = prop('event');
   const connectStorage$ = connectStorageModel(connect.connect);
 
+  const view$ = view(
+    connect.DOM,
+    info.DOM,
+    responses.DOM,
+    messageSelectors.DOM,
+    paramInput.DOM,
+  );
+
   return {
-    DOM: view(connect.DOM, info.DOM, responses.DOM),
+    DOM: view$,
     RUN: runEvent,
     preventDefault: connect.connect.map(getEvent),
     STICKY_SCROLL: info.STICKY_SCROLL,

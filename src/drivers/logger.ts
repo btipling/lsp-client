@@ -7,7 +7,7 @@ export function info(msgs$: Stream<string[]>): Stream<LoggerMessage> {
   return msgs$.map((messages) => ({ messages, level: levelToNumber('info') }));
 }
 
-function levelToNumber(level?: string): number {
+function levelToNumber(level: string): number {
   return ((n: number) => n >= 0 ? n : 0)([
     'error',
     'warning',

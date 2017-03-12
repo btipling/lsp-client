@@ -14,23 +14,24 @@
   },
   "dependencies": {
     "@cycle/base": "^4.3.0",
-    "@cycle/dom": "^14.3.0",
-    "@cycle/rxjs-run": "^3.3.0",
+    "@cycle/dom": "^15.2.0",
+    "@cycle/rxjs-run": "^6.1.0",
     "@cycle/storage": "^3.0.0",
     "@cycle/xstream-run": "^4.2.0",
     "@types/core-js": "^0.9.35",
-    "@types/electron": "^1.4.32",
-    "@types/ramda": "^0.0.3",
-    "electron": "^1.4.15",
+    "@types/electron": "^1.4.33",
+    "@types/ramda": "^0.0.4",
+    "electron": "^1.6.1",
     "electron-default-menu": "^1.0.0",
     "ramda": "^0.23.0",
-    "rxjs": "^5.1.1",
+    "rxjs": "^5.2.0",
     "stylus": "^0.54.5",
     "tachyons": "^4.6.2",
     "tachyons-flexbox": "^2.0.4",
-    "tslint": "^4.4.2",
+    "tslint": "^4.5.1",
     "tslint-eslint-rules": "^3.4.0",
-    "typescript": "^2.1.6",
-    "xstream": "^10.2.0"
+    "typescript": "^2.2.1",
+    "vscode-languageserver-types": "^3.0.3",
+    "xstream": "^10.3.0"
   }
 }
