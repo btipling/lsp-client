@@ -3,19 +3,13 @@ import { flip, keys, map, prop } from 'ramda';
 import xs, { Stream } from 'xstream';
 import { IMessageSelectSinks } from '../interfaces/sinks';
 import { ISources } from '../interfaces/sources';
-import { RequestMessageTypes } from '../protocol/request-messages/types';
+import { RequestMessageTypes } from '../protocol/types';
 
 function intent(domSource: DOMSource): Stream<string> {
   return domSource.select('.MessageSelector-item').events('click')
-    .map((e) => {
-      const el = e.srcElement;
-      console.log('el', el);
-      if (!el) {
-        return '';
-      }
-      return el.getAttribute('data-type') || '';
-    })
-    .debug((e) => console.log('clicked', e));
+    .map((e) => e.srcElement)
+    .filter((e) => !!e)
+    .map((el: Element) => el.getAttribute('data-type') || '');
 }
 
 function model(actions$: Stream<string>): Stream<() => object> {
