@@ -1,5 +1,5 @@
 
 
 export function initialize (): Object {
-  return {};
+  return {foo: 'bar'};
 }

@@ -9,3 +9,7 @@ export interface ISources {
   RUN: Stream<RunMessage>;
   storage: Stream<string>;
 }
+
+export interface IParamInputSources extends ISources {
+  messages: Stream<() => object>;
+}

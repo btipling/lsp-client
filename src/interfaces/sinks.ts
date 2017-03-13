@@ -24,3 +24,8 @@ export interface IInfoSinks {
 export interface IDOMOnlySinks {
   DOM: Stream<VNode>;
 }
+
+export interface IMessageSelectSinks {
+  messages: Stream<() => object>;
+  DOM: Stream<VNode>;
+}

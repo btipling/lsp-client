@@ -1,7 +1,7 @@
 import { div, makeDOMDriver, VNode } from '@cycle/dom';
 import storageDriver from '@cycle/storage';
 import { run } from '@cycle/xstream-run';
-import { append, both, compose, equals, flip, is, length, lt, prop, zipObj } from 'ramda';
+import { append, both, compose, equals, flip, is, length, lt, merge, prop, zipObj } from 'ramda';
 import xs, { Stream } from 'xstream';
 import logger from '../drivers/logger';
 import { preventDefault } from '../drivers/prevent-default';
@@ -76,11 +76,15 @@ function connectStorageModel(connect$: Stream<ConnectStream>): Stream<{[index: s
 }
 
 function main(sources: ISources): ISinks {
+  const addToSources = merge(sources);
+
   const connect = Connect(sources);
   const info = Info(sources);
   const responses = Response(sources);
   const messageSelectors = MessageSelectors(sources);
-  const paramInput = ParamInput(sources);
+
+  const { messages } = messageSelectors;
+  const paramInput = ParamInput(addToSources({ messages }));
 
   const runEvent = connect.connect.map(({ value, type }) => ({ payload: value, type }));
   const getEvent: (c: ConnectStream) => Event = prop('event');
