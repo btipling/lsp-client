@@ -37,9 +37,6 @@ function view(): Stream<VNode> {
 
 export default function MessageSelector(sources: ISources): IMessageSelectSinks  {
   const actions$ = intent(sources.DOM);
-
-  // TODO: remove this once we do something useful with click.
-  actions$.addListener({ next: (e) => console.log('actions', e) });
   const messages$ = model(actions$);
 
   const html$ = view();
