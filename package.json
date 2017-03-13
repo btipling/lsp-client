@@ -10,7 +10,8 @@
     "styles": "yarn run stylus -- stylus/main.styl -o dist",
     "debug": "yarn build-index",
     "build": "yarn run styles && yarn lint && yarn build-main && yarn debug",
-    "start": "yarn build && yarn debug"
+    "dev": "yarn run build && yarn run start",
+    "start": "./Electron.app/Contents/MacOS/Electron ."
   },
   "dependencies": {
     "@cycle/base": "^4.3.0",
