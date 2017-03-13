@@ -1,20 +1,40 @@
-import { li, ul } from '@cycle/dom';
+import { DOMSource, li, ul, VNode } from '@cycle/dom';
 import { keys, map } from 'ramda';
-import xs from 'xstream';
+import xs, { Stream } from 'xstream';
 import { IDOMOnlySinks } from '../interfaces/sinks';
 import { ISources } from '../interfaces/sources';
 import { RequestMessageTypes } from '../protocol/request-messages/types';
 
-export default function MessageSelector(sources: ISources): IDOMOnlySinks  {
+function intent(domSource: DOMSource): Stream<string> {
+  return domSource.select('.MessageSelector-item').events('click')
+    .map((e) => {
+      const el = e.srcElement;
+      console.log('el', el);
+      if (!el) {
+        return '';
+      }
+      return el.getAttribute('data-type') || '';
+    })
+    .debug((e) => console.log('clicked', e));
+}
 
-  const toListItem = (type: string) => li(type);
+function view(): Stream<VNode> {
+  const toListItem = (type: string) => li('.MessageSelector-item', { attrs: { 'data-type': type } }, type);
   const arrayToList = map(toListItem);
   const requestMessageTypeNames = keys(RequestMessageTypes);
   const requestMessageList = arrayToList(requestMessageTypeNames);
 
-  const html = xs.of(ul('.h-50 .w-100 .pa2. .mt2 .mb2 .MessageSelector', 'message selector', requestMessageList));
+  return xs.of(ul('.h-50 .w-100 .pa2. .mt2 .mb2 .MessageSelector', 'message selector', requestMessageList));
+}
 
+export default function MessageSelector(sources: ISources): IDOMOnlySinks  {
+  const actions$ = intent(sources.DOM);
+
+  // TODO: remove this once we do something useful with click.
+  actions$.addListener({ next: (e) => console.log('actions', e) });
+
+  const html$ = view();
   return {
-    DOM: html,
+    DOM: html$,
   };
 }
