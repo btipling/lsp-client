@@ -3,7 +3,7 @@ import { flip, keys, map, prop } from 'ramda';
 import xs, { Stream } from 'xstream';
 import { IMessageSelectSinks } from '../interfaces/sinks';
 import { ISources } from '../interfaces/sources';
-import { RequestMessageTypes } from '../protocol/types';
+import { RequestMessage, RequestMessageTypes } from '../protocol/types';
 
 function intent(domSource: DOMSource): Stream<string> {
   return domSource.select('.MessageSelector-item').events('click')
@@ -12,12 +12,13 @@ function intent(domSource: DOMSource): Stream<string> {
     .map((el: Element) => el.getAttribute('data-type') || '');
 }
 
-function model(actions$: Stream<string>): Stream<() => object> {
+function model(actions$: Stream<string>): Stream<RequestMessage> {
   const getRequestMessageFunction: (name: string) => (() => object) = flip(prop)(RequestMessageTypes);
 
   return actions$
     .map(getRequestMessageFunction)
-    .startWith(RequestMessageTypes.initialize);
+    .startWith(RequestMessageTypes.initialize)
+    .map((f: (() => RequestMessage)) => f());
 }
 
 function view(): Stream<VNode> {

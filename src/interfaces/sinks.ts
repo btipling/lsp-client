@@ -2,6 +2,7 @@ import { DOMSource, VNode } from '@cycle/dom';
 import { Stream } from 'xstream';
 import { ConnectStream } from '../components/connect';
 import { RunEvent } from '../drivers/run';
+import { RequestMessage } from '../protocol/types';
 
 export interface ISinks {
   DOM: Stream<VNode>;
@@ -26,6 +27,6 @@ export interface IDOMOnlySinks {
 }
 
 export interface IMessageSelectSinks {
-  messages: Stream<() => object>;
+  messages: Stream<RequestMessage>;
   DOM: Stream<VNode>;
 }
