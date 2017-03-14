@@ -1,4 +1,10 @@
+import { RequestMessage } from './types';
 
-export function initialize(): object {
-  return { initialize: 'initializeData' };
+export function initialize(): RequestMessage {
+  return {
+    methodName: 'initialize',
+    params: {
+      initialize: 'initalizedata',
+    },
+  };
 }

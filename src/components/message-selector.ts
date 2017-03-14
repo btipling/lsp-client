@@ -26,7 +26,7 @@ function view(): Stream<VNode> {
   const requestMessageTypeNames = keys(RequestMessageTypes);
   const requestMessageList = arrayToList(requestMessageTypeNames);
 
-  return xs.of(ul('.h-50 .w-100 .pa2. .mt2 .mb2 .MessageSelector', 'message selector', requestMessageList));
+  return xs.of(ul('.h-50 .w-100 .pa2. .mt2 .mb2 .ba .MessageSelector', 'message selector', requestMessageList));
 }
 
 export default function MessageSelector(sources: ISources): IMessageSelectSinks  {
