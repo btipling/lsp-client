@@ -1,9 +1,10 @@
 import { button, DOMSource, form, input, VNode } from '@cycle/dom';
-import { always, compose, contains, equals, flip, head, ifElse, or, prop, values } from 'ramda';
+import { always, compose, contains, equals, flip, ifElse, prop } from 'ramda';
 import xs, { Stream } from 'xstream';
 import { RunEventType, RunMessage, RunMessageType } from '../drivers/run';
 import { IConnectSinks } from '../interfaces/sinks';
 import { ISources } from '../interfaces/sources';
+import { getValueFromFormDOMSourceStream } from './utils';
 
 export type ConnectStream = { value: string, event: Event|null, type: RunEventType };
 
@@ -11,16 +12,11 @@ function intent(DOM: DOMSource): Stream<ConnectStream> {
   // Gets input value and submit event from DOM.
   const { Connect, Disconnect } = RunEventType;
 
-  const input$ = DOM.select('.connect-path').elements().take(1);
+  const $path = getValueFromFormDOMSourceStream(DOM.select('.connect-path'));
   const submit$ = DOM.select('.connect-form').events('submit');
   const disconnectButtonClick$ = DOM.select('.connect-disconnect').events('click');
 
-  const getFirst: (els: HTMLInputElement[]) => Element = head;
-  const getValue: (e: Element) => string = prop('value');
-  const getValueFromFirstElement: (e: HTMLInputElement[]) => string = compose(getValue, getFirst);
-
-  const combineValueAndSubmitEvent = (event) => input$
-    .map(getValueFromFirstElement)
+  const combineValueAndSubmitEvent = (event) => $path
     .map((value: string) => ({ value, event, type: Connect }),
   );
 
