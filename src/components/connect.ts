@@ -37,7 +37,6 @@ function intent(DOM: DOMSource): Stream<ConnectStream> {
 
 function view(connect$: Stream<RunMessage>, storage: any): Stream<VNode> {
   // Creates connection input form.
-
   const { CONNECTED, DISCONNECTED } = RunMessageType;
   const isConnectionMessage = compose(flip(contains)([ CONNECTED, DISCONNECTED ]), prop('type'));
   const isConnected = compose(equals(CONNECTED), prop('type'));
