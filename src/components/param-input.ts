@@ -1,5 +1,4 @@
 import { button, div, DOMSource, form, input, label, textarea, VNode } from '@cycle/dom';
-import { prop } from 'ramda';
 import xs, { Stream } from 'xstream';
 import { IDOMOnlySinks } from '../interfaces/sinks';
 import { IParamInputSources } from '../interfaces/sources';
